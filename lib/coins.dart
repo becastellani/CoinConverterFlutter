@@ -21,14 +21,14 @@ class ConversorDeMoedasPage extends StatefulWidget {
 }
 
 class _ConversorDeMoedasPageState extends State<ConversorDeMoedasPage> {
-  final TextEditingController _amountController = TextEditingController();
-  String _fromCurrency = 'USD';
-  String _toCurrency = 'EUR';
-  String _convertedAmount = '';
+  final TextEditingController _valorController = TextEditingController();
+  String _atual = 'USD';
+  String _para = 'EUR';
+  String _valorConvertido = '';
 
   final List<String> _currencies = ['USD', 'EUR', 'JPY', 'BRL'];
 
-  final Map<String, Map<String, double>> _conversionRates = {
+  final Map<String, Map<String, double>> _conversaoMap = {
     'USD': {'EUR': 0.92, 'JPY': 110.0, 'BRL': 5.2},
     'EUR': {'USD': 1.09, 'JPY': 120.0, 'BRL': 5.6},
     'JPY': {'USD': 0.0091, 'EUR': 0.0083, 'BRL': 0.046},
@@ -36,11 +36,11 @@ class _ConversorDeMoedasPageState extends State<ConversorDeMoedasPage> {
   };
 
   void _convert() {
-    double amount = double.tryParse(_amountController.text) ?? 0;
-    double rate = _conversionRates[_fromCurrency]?[_toCurrency] ?? 1.0;
-    double converted = amount * rate;
+    double amount = double.tryParse(_valorController.text) ?? 0;
+    double rate = _conversaoMap[_atual]?[_para] ?? 1.0;
+    double convertido = amount * rate;
     setState(() {
-      _convertedAmount = converted.toStringAsFixed(2);
+      _valorConvertido = convertido.toStringAsFixed(2);
     });
   }
 
@@ -103,7 +103,7 @@ class _ConversorDeMoedasPageState extends State<ConversorDeMoedasPage> {
             ),
             const SizedBox(height: 20),
             TextField(
-              controller: _amountController,
+              controller: _valorController,
               decoration: InputDecoration(
                 labelText: 'Digite o valor',
                 border: OutlineInputBorder(),
@@ -115,7 +115,7 @@ class _ConversorDeMoedasPageState extends State<ConversorDeMoedasPage> {
               children: [
                 Expanded(
                   child: DropdownButtonFormField<String>(
-                    value: _fromCurrency,
+                    value: _atual,
                     decoration: InputDecoration(
                       labelText: 'Moeda de Origem',
                       border: OutlineInputBorder(),
@@ -128,7 +128,7 @@ class _ConversorDeMoedasPageState extends State<ConversorDeMoedasPage> {
                     }).toList(),
                     onChanged: (value) {
                       setState(() {
-                        _fromCurrency = value!;
+                        _atual = value!;
                       });
                     },
                   ),
@@ -136,7 +136,7 @@ class _ConversorDeMoedasPageState extends State<ConversorDeMoedasPage> {
                 const SizedBox(width: 20),
                 Expanded(
                   child: DropdownButtonFormField<String>(
-                    value: _toCurrency,
+                    value: _para,
                     decoration: InputDecoration(
                       labelText: 'Moeda de Destino',
                       border: OutlineInputBorder(),
@@ -149,7 +149,7 @@ class _ConversorDeMoedasPageState extends State<ConversorDeMoedasPage> {
                     }).toList(),
                     onChanged: (value) {
                       setState(() {
-                        _toCurrency = value!;
+                        _para = value!;
                       });
                     },
                   ),
@@ -162,9 +162,9 @@ class _ConversorDeMoedasPageState extends State<ConversorDeMoedasPage> {
               child: const Text('Converter'),
             ),
             const SizedBox(height: 20),
-            if (_convertedAmount.isNotEmpty)
+            if (_valorConvertido.isNotEmpty)
               Text(
-                'Valor Convertido: $_convertedAmount $_toCurrency',
+                'Valor Convertido: $_valorConvertido $_para',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
           ],
